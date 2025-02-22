@@ -31,7 +31,7 @@ def one_message(input_text, role='modifier'):
         
     }
     headers = {
-        "Authorization": "Bearer sk-zszeipcwnpjtuksmfqwttkgnivzfawfuhqhzbqzaafaakltx",
+        "Authorization": "Bearer ",
         "Content-Type": "application/json"
     }
 
