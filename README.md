@@ -8,7 +8,7 @@ This is the official implement of ***A Zero-shot Multi-Agent framework for Reaso
 
 A structure illustration is displayed below:
 
-
+![ILL](https://github.com/Adelante8617/Zero-shot-ref-seg/blob/main/illustration.png)
 
 ---
 
