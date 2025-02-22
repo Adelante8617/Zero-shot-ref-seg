@@ -5,7 +5,7 @@ from prompt import prompt_for_caption
 import json  
 from openai import OpenAI
 
-API_KEY = 'sk-zszeipcwnpjtuksmfqwttkgnivzfawfuhqhzbqzaafaakltx'
+API_KEY = ''
 BASE_URL = 'https://api.siliconflow.cn/v1'
 MODEL = 'Pro/Qwen/Qwen2-VL-7B-Instruct'
 
@@ -56,7 +56,7 @@ if __name__ == "__main__":
     base64_image = image_to_base64(image_path)
 
     client = OpenAI(
-        api_key="sk-zszeipcwnpjtuksmfqwttkgnivzfawfuhqhzbqzaafaakltx",
+        api_key="",
         base_url="https://api.siliconflow.cn/v1"
     )
 
