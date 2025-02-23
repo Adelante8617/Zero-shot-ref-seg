@@ -1,6 +1,6 @@
 import requests
 import ast
-from cvt_img_to_caption import image_to_base64
+from Img2Cap.cvt_img_to_base64fmt import image_to_base64
 from Img2Cap.prompt_img import prompt_for_caption
 import json  
 from openai import OpenAI

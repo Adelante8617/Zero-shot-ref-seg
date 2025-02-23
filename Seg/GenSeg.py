@@ -28,6 +28,7 @@ def show_box(box, ax):
 
 
 def getSegFromBox(image_path, input_boxes:list, visualize=False):
+
     image = cv2.imread(image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
@@ -47,19 +48,23 @@ def getSegFromBox(image_path, input_boxes:list, visualize=False):
         )
 
         onemask = masks[0]
+        print(onemask.shape)
         final_masks.append(onemask)
 
-    print(len(final_masks))
+    result = reduce(np.logical_or, final_masks) if len(final_masks) > 0 else None
 
-    result = reduce(np.logical_or, final_masks)
+    if result is None:
+        return
+
+    plt.figure(figsize=(10, 10))
+    plt.imshow(image)
+    show_mask(result, plt.gca())
+    for box in input_boxes:
+        show_box(box, plt.gca())
+    plt.axis('on')
+    plt.savefig('output_image.png')  
 
     if visualize:
-        plt.figure(figsize=(10, 10))
-        plt.imshow(image)
-        show_mask(result, plt.gca())
-        for box in input_boxes:
-            show_box(box, plt.gca())
-        plt.axis('on')
         plt.show()
 
     return result

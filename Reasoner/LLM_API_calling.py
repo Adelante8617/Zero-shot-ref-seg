@@ -1,6 +1,6 @@
 import requests
 import ast
-from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify
+from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify, prompt_for_select
 
 def getAPIKEY():
     with open(r'D:/Zero-shot-ref-seg/api-keys.txt', 'r') as f:
@@ -9,10 +9,15 @@ def getAPIKEY():
     return API_KEY
 
 def one_message(input_text, role='modifier'):
+    role_dict = {
+        'modifier': prompt_for_modify,
+        'verifier': prompt_for_verify,
+        'selector': prompt_for_select
+    }
 
     API_KEY = getAPIKEY()
 
-    prompt = prompt_for_modify if role == 'modifier' else prompt_for_verify
+    prompt = role_dict[role]
 
     url = "https://api.siliconflow.cn/v1/chat/completions"
 
@@ -51,9 +56,11 @@ def one_message(input_text, role='modifier'):
 
     return dict_obj['choices'][0]['message']['content']
 
-def modify_query(query:str, background=""):
+def modify_query(query:str,background=""):
+    
     pass_state = False
-    role_list = ['modifier','verifier']
+    role_list = ['modifier','verifier', 'selector']
+
     cur_role_id = 0
     final_query = ''
     max_try = 3
@@ -84,8 +91,14 @@ def modify_query(query:str, background=""):
             cur_try += 1
             msg = 'This is the text you need to modify:\n{final_query},\nIt did not pass the checker. The reject reason and revise suggestion is as follow:\n' + msg
 
-    
+        
     return final_query
+
+def select_from_list(total_caption, query, sub_caption_list):
+    msg = "\{'general':" + f"'{total_caption}','query':'{query}','object_list':'{str(sub_caption_list)}'"+ "\}"
+    msg = one_message(input_text=msg, role='selector')
+    print(msg)
+    return msg
 
 if __name__ == "__main__":
     print(modify_query('A pipe that can use to suck soft drinks'))
