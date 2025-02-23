@@ -1,11 +1,21 @@
 import requests
 import ast
-from image_process.cvt_img_to_caption import image_to_base64
-from prompt import prompt_for_caption
+from cvt_img_to_caption import image_to_base64
+from Img2Cap.prompt_img import prompt_for_caption
 import json  
 from openai import OpenAI
 
 API_KEY = ''
+
+def getAPIKEY():
+    with open(r'D:/Zero-shot-ref-seg/api-keys.txt', 'r') as f:
+        API_KEY = f.read()
+        print('Get API KEY :', API_KEY)
+    return API_KEY
+
+
+
+
 BASE_URL = 'https://api.siliconflow.cn/v1'
 MODEL = 'Pro/Qwen/Qwen2-VL-7B-Instruct'
 
@@ -13,7 +23,7 @@ def getCaptionFromLMM(image_path,img_url=None, upload_mode='base64', detail="low
     img_url = ""
     if upload_mode == 'base64':
         base64_image = image_to_base64(image_path)
-        img_url = 'data:image/jpeg;base64,{base64_image}'
+        img_url = f'data:image/jpeg;base64,{base64_image}'
     elif upload_mode == 'web':
         pass
     else:
@@ -21,7 +31,7 @@ def getCaptionFromLMM(image_path,img_url=None, upload_mode='base64', detail="low
         return 
 
     client = OpenAI(
-        api_key=API_KEY,
+        api_key=getAPIKEY(),
         base_url=BASE_URL
     )
 
@@ -72,12 +82,12 @@ if __name__ == "__main__":
                         "image_url": {
                             "url": f"data:image/jpeg;base64,{base64_image}",
                             #'url':'https://sf-maas-uat-prod.oss-cn-shanghai.aliyuncs.com/dog.png',
-                            "detail":"low"
+                            "detail":"high"
                         }
                     },
                     {
                         "type": "text",
-                        "text": "尽可能详细地描述这张图片中的所有物品.不要漏掉值得注意的细节,特别注重对狗的细节描述，只需作客观的描述，无需形容性的表达"
+                        "text": "Describe all objects in this photo **as detailed as possible**."
                     }
                 ]
             }],
@@ -85,7 +95,7 @@ if __name__ == "__main__":
             stream=False,
             
     )
-    print(response.choices[0].message.content)
+    #print(response.choices[0].message.content)
     
 
 

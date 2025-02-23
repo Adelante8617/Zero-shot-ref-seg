@@ -29,8 +29,8 @@ model = load_model(CONFIG_PATH, WEIGHTS_PATH)
 
 # Define paths and settings
 IMAGE_NAME = "dog-2.jpeg"
-IMAGE_PATH = os.path.join(HOME, "data", IMAGE_NAME)
-TEXT_PROMPT = "straw"  # or "dog"
+IMAGE_PATH = r"../Data/images/dogs.jpg"
+TEXT_PROMPT = "dog"  # or "dog"
 BOX_TRESHOLD = 0.35
 TEXT_TRESHOLD = 0.25
 
@@ -45,6 +45,8 @@ boxes, logits, phrases = predict(
     box_threshold=BOX_TRESHOLD,
     text_threshold=TEXT_TRESHOLD
 )
+
+print(boxes)
 
 # Annotate the image with predicted boxes and phrases
 annotated_frame = annotate(image_source=image_source, boxes=boxes, logits=logits, phrases=phrases)

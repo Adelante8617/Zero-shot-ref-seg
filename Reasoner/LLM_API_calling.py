@@ -1,8 +1,17 @@
 import requests
 import ast
-from prompt import prompt_for_modify, prompt_for_verify
+from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify
+
+def getAPIKEY():
+    with open(r'D:/Zero-shot-ref-seg/api-keys.txt', 'r') as f:
+        API_KEY = f.read()
+        print('Get API KEY :', API_KEY)
+    return API_KEY
 
 def one_message(input_text, role='modifier'):
+
+    API_KEY = getAPIKEY()
+
     prompt = prompt_for_modify if role == 'modifier' else prompt_for_verify
 
     url = "https://api.siliconflow.cn/v1/chat/completions"
@@ -31,7 +40,7 @@ def one_message(input_text, role='modifier'):
         
     }
     headers = {
-        "Authorization": "Bearer ",
+        "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
 
@@ -42,14 +51,14 @@ def one_message(input_text, role='modifier'):
 
     return dict_obj['choices'][0]['message']['content']
 
-def modify_query(query:str):
+def modify_query(query:str, background=""):
     pass_state = False
     role_list = ['modifier','verifier']
     cur_role_id = 0
     final_query = ''
     max_try = 3
     cur_try = 0
-    msg = query
+    msg = "The background is :"+background+'\nYou need to find the following object:' + query
 
     while not pass_state and cur_try < max_try:
         # current role
@@ -57,7 +66,7 @@ def modify_query(query:str):
         # send message
         msg = one_message(input_text=msg, role=role)
         print(msg)
-        print('============================\n\n')
+        #print('============================\n\n')
         # end modify state
         if role == 'modifier':
             # convert to verifier
@@ -73,10 +82,10 @@ def modify_query(query:str):
         elif role == 'verifier' and '\'pass\':True' not in msg.replace(' ','').replace('\"','\'').replace('\n',''):
             cur_role_id = 0
             cur_try += 1
-            msg = '这是你需要修正的文本:\n{final_query}，\n它并未通过审查，你需要根据如下的审查结果修改：\n' + msg
+            msg = 'This is the text you need to modify:\n{final_query},\nIt did not pass the checker. The reject reason and revise suggestion is as follow:\n' + msg
 
     
     return final_query
 
 if __name__ == "__main__":
-    print(modify_query('一个可以用来回答文本问题的网络程序，它由OpenAI开发'))
+    print(modify_query('A pipe that can use to suck soft drinks'))

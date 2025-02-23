@@ -3,14 +3,12 @@ import torch
 import matplotlib.pyplot as plt
 import cv2
 
-import sys
-sys.path.append("..")
 from segment_anything import sam_model_registry, SamPredictor
 from functools import reduce
 
 # basic config
 # in the future this can be a arg parse config
-sam_checkpoint = "./weight/sam_vit_h_4b8939.pth"
+sam_checkpoint = "D:/Zero-shot-ref-seg/Seg/weight/sam_vit_h_4b8939.pth"
 model_type = "vit_h"
 device = "cpu"
 
@@ -29,8 +27,8 @@ def show_box(box, ax):
     ax.add_patch(plt.Rectangle((x0, y0), w, h, edgecolor='green', facecolor=(0,0,0,0), lw=2))    
 
 
-def getSegFromBox(image, input_boxes:list, visualize=False):
-    image = cv2.imread(r'../Data/images/dogs.jpg')
+def getSegFromBox(image_path, input_boxes:list, visualize=False):
+    image = cv2.imread(image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
     sam.to(device=device)
@@ -51,6 +49,7 @@ def getSegFromBox(image, input_boxes:list, visualize=False):
         onemask = masks[0]
         final_masks.append(onemask)
 
+    print(len(final_masks))
 
     result = reduce(np.logical_or, final_masks)
 
