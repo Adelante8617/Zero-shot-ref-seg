@@ -17,9 +17,9 @@ total_caption = getCaptionFromLMM(image_path)
 
 print(f"Image caption:\n{total_caption}")
 
-query = 'The crazily crowing cat'
+query = 'A green bird'
 
-modified = modify_query(query, total_caption)
+modified = modify_query(query)
 
 print(f"Modified query:\n{modified}")
 

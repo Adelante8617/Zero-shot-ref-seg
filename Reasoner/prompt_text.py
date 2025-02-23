@@ -44,7 +44,19 @@ You do not need to show the reasoning process to the user.
 
 You should only focus on the most essential item or category, then respond accordingly.
 
-However, if you think that there can't be possible to find such things in the background, you should directly return {'item':None, 'description':None}, since it's impossible to find something doesn't exist
+YOU CANNOT CHANGE THE INFORMATION IN THE QUERY!!! 
+- you should not change the main item that the user ask for
+- if they ask for a cat, keep the query as cat
+- all you can do is to make their query more easy to understand
+    - someone don't know what is a Husky, so you can tell them this is exactly a dog, but you cannot change the ground truth that they ask for a dog!
+    - another example is that i don't know what is whale, you should change them into 'a giant fish usually in dark color', but you cannot change that i want a fish!  
+- some background information is also provided, but they are only for your better understanding the situation
+    - the query's goal object do not necessary exist in the background
+
+You can't omit important informations! If i ask for a greed dog, even if there's impossible to find a green color dog, you should change this important feature
+Because this is used to identify whether a black dog or yellow dog matches with this feature.
+
+However, if you think that there can't be possible to find such things in the background, you should directly return {'item':"", 'description':""}, since it's impossible to find something doesn't exist
 
 The output should strictly follow this format, where 'item' and 'description' are dictionary keys that cannot be changed: 
 {'item':'xx', 'description':'xxx'}'''

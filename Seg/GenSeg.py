@@ -31,6 +31,10 @@ def getSegFromBox(image_path, input_boxes:list, visualize=False):
 
     image = cv2.imread(image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+    if len(input_boxes) == 0:
+        return np.zeros(image.shape[:2], dtype=bool)
+    
     sam = sam_model_registry[model_type](checkpoint=sam_checkpoint)
     sam.to(device=device)
 
@@ -54,7 +58,7 @@ def getSegFromBox(image_path, input_boxes:list, visualize=False):
     result = reduce(np.logical_or, final_masks) if len(final_masks) > 0 else None
 
     if result is None:
-        return
+        return np.zeros(image.shape[:2], dtype=bool)
 
     plt.figure(figsize=(10, 10))
     plt.imshow(image)

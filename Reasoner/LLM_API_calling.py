@@ -65,7 +65,8 @@ def modify_query(query:str,background=""):
     final_query = ''
     max_try = 3
     cur_try = 0
-    msg = "The background is :"+background+'\nYou need to find the following object:' + query
+    #msg = "The background is :"+background+'\nYou need to find the following object:' + query
+    msg = 'You need to find the following object:' + query
 
     while not pass_state and cur_try < max_try:
         # current role
