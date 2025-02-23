@@ -17,7 +17,7 @@ total_caption = getCaptionFromLMM(image_path)
 
 print(f"Image caption:\n{total_caption}")
 
-query = 'A green bird'
+query = 'A tool that can be used for rainy days, with a long stick holder and a cloth to prevent water splatting on people\'s body'
 
 modified = modify_query(query)
 
