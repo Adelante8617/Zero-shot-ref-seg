@@ -22,7 +22,7 @@ def one_message(input_text, role='modifier'):
     url = "https://api.siliconflow.cn/v1/chat/completions"
 
     payload = {
-        "model": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "model": "Qwen/Qwen2.5-32B-Instruct",
         "messages": [
             {
                 "role":"system",
