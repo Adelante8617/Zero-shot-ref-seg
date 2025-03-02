@@ -1,5 +1,8 @@
-
+*.png
 *.pth
 *.jpg
 *.jpeg
 api-keys.txt
+*.json
+*.pyc
+*.p
