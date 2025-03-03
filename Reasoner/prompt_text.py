@@ -100,3 +100,9 @@ Note that:
 }
 '''
 
+prompt_for_rewrite = '''
+Rewrite this sentence. Note that you should convert it into a sentence that have the same meaning, but not so straightforward. For example, you can replace some noun in it with a description to the noun, without the noun itself's appearance.
+
+The sentence to rewrite is:
+'''
+
