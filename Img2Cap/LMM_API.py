@@ -19,7 +19,7 @@ def getAPIKEY():
 BASE_URL = 'https://api.siliconflow.cn/v1'
 MODEL = 'Pro/Qwen/Qwen2-VL-7B-Instruct'
 
-def getCaptionFromLMM(image_path,img_url=None, upload_mode='base64', detail="low"):
+def generate_caption(image_path,img_url=None, upload_mode='base64', detail="low"):
     img_url = ""
     if upload_mode == 'base64':
         base64_image = image_to_base64(image_path)

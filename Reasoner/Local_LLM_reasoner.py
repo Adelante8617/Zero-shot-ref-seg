@@ -1,31 +1,41 @@
 import requests
 import ast
-#from Reasoner.
-from prompt_text import prompt_for_modify, prompt_for_verify, prompt_for_select
+import gc
+from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify, prompt_for_select
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from torch.cuda.amp import autocast
+device = "cuda" if torch.cuda.is_available() else "cpu"
+#device = "cpu"
 
 model_name = "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B"
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 model = AutoModelForCausalLM.from_pretrained(model_name, torch_dtype=torch.float16)
-device = "cuda" if torch.cuda.is_available() else "cpu"
+
 model.to(device)
 
 generation_config = {
-        "max_length": 8192,  # 最大生成长度
-        "temperature": 0.7,  # 温度参数
+        "max_new_tokens": 1024,  # 最大生成长度
+        "temperature": 0.01,  # 温度参数
         "do_sample": True,  # 使用采样
         "num_return_sequences": 1,  # 返回的序列数量
         "repetition_penalty": 1.2,  # 重复惩罚
     }
 
 def one_message(input_text, role='modifier'):
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
+    
+
+    torch.cuda.empty_cache()
+
     role_dict = {
         'modifier': prompt_for_modify,
         'verifier': prompt_for_verify,
-        'selector': prompt_for_select
+        'selector': "This task is easy. DO NOT THINK!!! directly answer the question. "+prompt_for_select
     }
 
 
@@ -38,12 +48,11 @@ def one_message(input_text, role='modifier'):
         outputs = model.generate(**inputs, **generation_config)
 
     output_text = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    print(output_text)
 
     return output_text
 
 def modify_query(query:str,background=""):
-    
+
     pass_state = False
     role_list = ['modifier','verifier', 'selector']
 
@@ -59,7 +68,7 @@ def modify_query(query:str,background=""):
         role = role_list[cur_role_id]
         # send message
         msg = one_message(input_text=msg, role=role)
-        print(msg)
+        #print(msg)
         #print('============================\n\n')
         # end modify state
         if role == 'modifier':
@@ -82,10 +91,10 @@ def modify_query(query:str,background=""):
     return final_query
 
 def select_from_list(total_caption, query, sub_caption_list):
-    msg = "\{'general':" + f"'{total_caption}','query':'{query}','object_list':'{str(sub_caption_list)}'"+ "\}"
+    msg = "\{'general':" + f"'{total_caption}','query':'{query}','object_list':'{str(sub_caption_list)}'"+ "\} " + "\nDO NOT think too much.  Remember to return a list in the given format!!!!!!"
     msg = one_message(input_text=msg, role='selector')
-    print(msg)
+    print("\n=====================\n",msg)
     return msg
 
 if __name__ == "__main__":
-    print(modify_query('A pipe that can use to suck soft drinks'))
+    print(modify_query('A kind of animal that usually regarded as peoples pet, and they can be a guardian of our backyard'))

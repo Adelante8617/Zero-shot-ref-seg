@@ -14,7 +14,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 model.to(device)
 
 generation_config = {
-        "max_length": 8192,  # 最大生成长度
+        "max_length": 128,  # 最大生成长度
         "temperature": 0.7,  # 温度参数
         "do_sample": True,  # 使用采样
         "num_return_sequences": 1,  # 返回的序列数量
@@ -24,6 +24,8 @@ generation_config = {
 # 准备输入
 
 while True:
+    torch.cuda.empty_cache()
+
     input_text = "解释我给出的名词，要求不能出现物品本身的名称。例如，当我给出‘雨伞’，你应该回答‘一种雨天使用的可以撑开的长条状工具’。注意，你的回答应该遵循固定的格式如下：\{'input':'雨伞','output':'一种雨天使用的长条状工具'\}。现在，将‘"+input()+"’重述："
     inputs = tokenizer(input_text, return_tensors="pt").to(device)
 

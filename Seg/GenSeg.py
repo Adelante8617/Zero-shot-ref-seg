@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 import cv2
+import gc
 
 from segment_anything import sam_model_registry, SamPredictor
 from functools import reduce
@@ -28,6 +29,8 @@ def show_box(box, ax):
 
 
 def getSegFromBox(image_path, input_boxes:list, visualize=False):
+    gc.collect()
+    torch.cuda.empty_cache()
 
     image = cv2.imread(image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
