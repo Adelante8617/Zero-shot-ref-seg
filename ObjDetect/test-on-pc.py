@@ -30,7 +30,7 @@ model = load_model(CONFIG_PATH, WEIGHTS_PATH)
 # Define paths and settings
 IMAGE_NAME = "dog-2.jpeg"
 IMAGE_PATH = r"../Data/images/dogs.jpg"
-TEXT_PROMPT = "dog"  # or "dog"
+TEXT_PROMPT = "dog on the left"  # or "dog"
 BOX_TRESHOLD = 0.35
 TEXT_TRESHOLD = 0.25
 

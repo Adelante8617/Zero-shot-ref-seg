@@ -708,10 +708,40 @@ def inverse_sigmoid(x, eps=1e-3):
     return torch.log(x1 / x2)
 
 
-def clean_state_dict(state_dict):
+from collections import OrderedDict
+import torch
+
+from collections import OrderedDict
+import torch
+
+def clean_state_dict(state_dict, model):
     new_state_dict = OrderedDict()
+    model_state_dict = model.state_dict()  # 获取当前模型的权重
+
     for k, v in state_dict.items():
-        if k[:7] == "module.":
-            k = k[7:]  # remove `module.`
-        new_state_dict[k] = v
+        if k.startswith("module."):
+            k = k[7:]  # 去掉 `module.` 前缀
+
+        if k in model_state_dict:
+            if v.shape == model_state_dict[k].shape:
+                new_state_dict[k] = v  # 形状匹配，直接加载
+            elif k == "bert.embeddings.word_embeddings.weight":
+                old_vocab_size, emb_dim = v.shape
+                new_vocab_size, _ = model_state_dict[k].shape
+
+                if old_vocab_size > new_vocab_size:
+                    print(f"Truncating {k}: {old_vocab_size} → {new_vocab_size}")
+                    new_state_dict[k] = v[:new_vocab_size, :]  # 直接截断
+
+                elif old_vocab_size < new_vocab_size:
+                    print(f"Expanding {k}: {old_vocab_size} → {new_vocab_size}")
+                    new_weight = torch.randn(new_vocab_size, emb_dim, dtype=v.dtype, device=v.device)  # 随机初始化新词
+                    new_weight[:old_vocab_size, :] = v  # 复制已有的权重
+                    new_state_dict[k] = new_weight
+
+            else:
+                print(f"Skipping {k} due to shape mismatch: {v.shape} vs {model_state_dict[k].shape}")
+
     return new_state_dict
+
+

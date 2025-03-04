@@ -30,10 +30,16 @@ def load_model(model_config_path: str, model_checkpoint_path: str, device: str =
     args = SLConfig.fromfile(model_config_path)
     args.device = device
     model = build_model(args)
+    
     checkpoint = torch.load(model_checkpoint_path, map_location="cpu")
-    model.load_state_dict(clean_state_dict(checkpoint["model"]), strict=False)
+    
+    # 过滤、截断或扩展 `word_embeddings.weight`
+    model.load_state_dict(clean_state_dict(checkpoint["model"], model), strict=False)
+    
     model.eval()
     return model
+
+
 
 
 def load_image(image_path: str) -> Tuple[np.array, torch.Tensor]:
