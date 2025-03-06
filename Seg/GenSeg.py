@@ -30,7 +30,6 @@ def show_box(box, ax):
 
 def getSegFromBox(image_path, input_boxes:list, visualize=False):
     gc.collect()
-    torch.cuda.empty_cache()
 
     image = cv2.imread(image_path)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

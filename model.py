@@ -7,7 +7,7 @@ sys.path.append(r'D:/Zero-shot-ref-seg/Reasoner')
 from Img2Cap.local_captioner import generate_caption
 from ObjDetect.BoxGen import getBoxFromText
 from Reasoner.Local_LLM_reasoner import modify_query, select_from_list
-from Seg.GenSeg import getSegFromBox
+#from Seg.GenSeg import getSegFromBox
 import ast
 from PIL import Image
 
@@ -96,9 +96,11 @@ print(item_index)
 
 selected_boxes = [boxes[i-1] for i in item_index if i-1<len(boxes)]
 
-segs = getSegFromBox(image_path, selected_boxes, True)
+print("Totally using:", t_sel-t_start, "seconds.\n\n")
 
-t_seg = time()
-print("Get segementation using:", t_seg-t_sel, "seconds.\n\n")
+#segs = getSegFromBox(image_path, selected_boxes, True)
 
-print("Totally using:", t_seg-t_start, "seconds.\n\n")
+#t_seg = time()
+#print("Get segementation using:", t_seg-t_sel, "seconds.\n\n")
+
+#print("Totally using:", t_seg-t_start, "seconds.\n\n")
