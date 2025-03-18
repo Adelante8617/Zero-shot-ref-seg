@@ -6,3 +6,6 @@ api-keys.txt
 *.json
 *.pyc
 *.p
+__pycache__
+*.pyc
+*.jsonl
