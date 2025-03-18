@@ -29,6 +29,7 @@ def show_box(box, ax):
 
 
 def getSegFromBox(image_path, input_boxes:list, visualize=False):
+
     gc.collect()
 
     image = cv2.imread(image_path)
@@ -49,12 +50,11 @@ def getSegFromBox(image_path, input_boxes:list, visualize=False):
         masks, _, _ = predictor.predict(
             point_coords=None,
             point_labels=None,
-            box=box[None,:],
+            box=box[None, :],
             multimask_output=False,
         )
 
         onemask = masks[0]
-        print(onemask.shape)
         final_masks.append(onemask)
 
     result = reduce(np.logical_or, final_masks) if len(final_masks) > 0 else None
@@ -62,15 +62,17 @@ def getSegFromBox(image_path, input_boxes:list, visualize=False):
     if result is None:
         return np.zeros(image.shape[:2], dtype=bool)
 
-    plt.figure(figsize=(10, 10))
-    plt.imshow(image)
-    show_mask(result, plt.gca())
-    for box in input_boxes:
-        show_box(box, plt.gca())
-    plt.axis('on')
-    plt.savefig('output_image.png')  
+    
+    
 
     if visualize:
+        plt.figure(figsize=(10, 10))
+        plt.imshow(image)
+        show_mask(result, plt.gca())
+        for box in input_boxes:
+            show_box(box, plt.gca())
+        plt.axis('on')
+        plt.savefig('output_image.png')  
         plt.show()
 
     return result

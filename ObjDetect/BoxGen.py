@@ -39,7 +39,6 @@ def getBoxFromText(IMAGE_PATH, TEXT_PROMPT, BOX_TRESHOLD = 0.25, TEXT_TRESHOLD =
         box_threshold=BOX_TRESHOLD,
         text_threshold=TEXT_TRESHOLD
     )
-    print(boxes)
 
     if visualize:
         boxes_to_vis = boxes

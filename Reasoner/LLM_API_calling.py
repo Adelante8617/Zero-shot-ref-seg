@@ -5,7 +5,6 @@ from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify, prompt_fo
 def getAPIKEY():
     with open(r'D:/Zero-shot-ref-seg/api-keys.txt', 'r') as f:
         API_KEY = f.read()
-        print('Get API KEY :', API_KEY)
     return API_KEY
 
 def one_message(input_text, role='modifier'):
@@ -22,7 +21,7 @@ def one_message(input_text, role='modifier'):
     url = "https://api.siliconflow.cn/v1/chat/completions"
 
     payload = {
-        "model": "Qwen/Qwen2.5-32B-Instruct",
+        "model": "deepseek-ai/DeepSeek-V2.5",
         "messages": [
             {
                 "role":"system",
@@ -50,9 +49,11 @@ def one_message(input_text, role='modifier'):
     }
 
     response = requests.request("POST", url, json=payload, headers=headers)
-
-    dict_obj = ast.literal_eval(response.text)
-    #print(dict_obj)
+    try:
+        dict_obj = ast.literal_eval(response.text)
+        print(dict_obj)
+    except:
+        return ""
 
     return dict_obj['choices'][0]['message']['content']
 
@@ -73,7 +74,6 @@ def modify_query(query:str,background=""):
         role = role_list[cur_role_id]
         # send message
         msg = one_message(input_text=msg, role=role)
-        print(msg)
         #print('============================\n\n')
         # end modify state
         if role == 'modifier':
@@ -95,10 +95,9 @@ def modify_query(query:str,background=""):
         
     return final_query
 
-def select_from_list(total_caption, query, sub_caption_list):
-    msg = "\{'general':" + f"'{total_caption}','query':'{query}','object_list':'{str(sub_caption_list)}'"+ "\}"
+def select_from_list(origin_query, total_caption, query, sub_caption_list):
+    msg = "\{'general':" + f"'{total_caption}','origin query':'{origin_query}','object_list':'{str(sub_caption_list)}'"+ "\}."+f" The origin query is converted to a more easy understanding version:{query}. But this is a reference information. Always based on the origin query to select."
     msg = one_message(input_text=msg, role='selector')
-    print(msg)
     return msg
 
 if __name__ == "__main__":

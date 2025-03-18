@@ -90,10 +90,9 @@ def modify_query(query:str,background=""):
         
     return final_query
 
-def select_from_list(total_caption, query, sub_caption_list):
-    msg = "\{'general':" + f"'{total_caption}','query':'{query}','object_list':'{str(sub_caption_list)}'"+ "\} " + "\nDO NOT think too much.  Remember to return a list in the given format!!!!!!"
+def select_from_list(origin_query, total_caption, query, sub_caption_list):
+    msg = "\{'general':" + f"'{total_caption}','origin query':'{origin_query}','object_list':'{str(sub_caption_list)}'"+ "\}."+f" The origin query is converted to a more easy understanding version:{query}. But this is a reference information. Always based on the origin query to select."
     msg = one_message(input_text=msg, role='selector')
-    print("\n=====================\n",msg)
     return msg
 
 if __name__ == "__main__":
