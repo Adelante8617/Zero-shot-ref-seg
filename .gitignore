@@ -9,3 +9,4 @@ api-keys.txt
 __pycache__
 *.pyc
 *.jsonl
+*.cpython-39.pyc
