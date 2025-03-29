@@ -16,7 +16,7 @@ def getAPIKEY():
 
 
 BASE_URL = 'https://api.siliconflow.cn/v1/chat/completions'
-MODEL = 'Qwen/Qwen2-VL-72B-Instruct'
+MODEL = 'Qwen/Qwen2.5-VL-32B-Instruct'
 
 def generate_caption(image_path,img_url=None, upload_mode='base64', detail="low"):
     img_url = ""

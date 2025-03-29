@@ -5,14 +5,14 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-data = load_json('D:/Zero-shot-ref-seg/Data/anns/refcoco/testA.json')
+data = load_json('D:/Zero-shot-ref-seg/Data/anns/refcoco/testB.json')
 
-modified_query = load_json('D:/Zero-shot-ref-seg/Data/output_cvt.json')
+#modified_query = load_json('D:/Zero-shot-ref-seg/Data/output_cvt.json')
 
 
-cvt_dict = {}
-for pair in modified_query:
-    cvt_dict[pair['origin']] = pair['convert']
+#cvt_dict = {}
+#for pair in modified_query:
+#    cvt_dict[pair['origin']] = pair['convert']
 
 
 newdata = []
@@ -24,7 +24,7 @@ for each in data:
     onedata = {
         "img_name": each['img_name'],
         "origin_query": longest_text,
-        "converted": cvt_dict[longest_text],
+        "converted": longest_text,
         "groundtruth_bbox": each['bbox'],
         "segment_id": each['segment_id']
     }
@@ -35,7 +35,7 @@ for each in data:
 print(len(newdata))
 
 # 保存为 JSON 文件
-with open("modified_dataset.json", "w", encoding="utf-8") as f:
+with open("modified_dataset_B.json", "w", encoding="utf-8") as f:
     json.dump(newdata, f, ensure_ascii=False, indent=4)
 
     

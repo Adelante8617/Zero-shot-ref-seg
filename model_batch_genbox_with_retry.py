@@ -37,7 +37,7 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-all_data = load_json('./Outputs/modified_dataset.json')
+all_data = load_json('./Outputs/modified_dataset_B.json')
 
 
 gen_box_result = []
@@ -76,8 +76,9 @@ def get_item_to_fetch(query, total_caption="", need_background_info=False):
     return content_dict, dict_has_content
     
 def one_process(image_path, query):
-    total_caption = generate_caption(image_path=image_path)
 
+    total_caption = generate_caption(image_path=image_path)
+    
     # first time
     content_dict, dict_has_content = get_item_to_fetch(query=query,  total_caption="", need_background_info=False)
 
@@ -123,12 +124,8 @@ for eachdata in tqdm(all_data[:]):
    
     eachdata['gen_box'] = one_process(query=query, image_path=image_path)
 
-    with open("output.jsonl", "a", encoding="utf-8") as f:
+    with open("output_v2prompt_test_B.jsonl", "a", encoding="utf-8") as f:
         json.dump(eachdata, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行
-
-    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-    print("New line")
-    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 
