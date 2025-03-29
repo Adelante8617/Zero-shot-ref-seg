@@ -66,14 +66,13 @@ And you should decide what object should be selected for query, and reply their 
 }
 In this example the query ask for a dog with light brown color, according to the general description, "One dog is light brown with a long tail and ears", which is correspond with the 1st object in the list.
 
-
 Note that: 
 - The index starts with 1.
 - You need to carefully think about the meaning of query, including the implicit numerical relationship.
     - For example, if the query asked for the biggest cat, this implies that you should only return at most one object.
     - Another example, if the query asked for 'all birds', you should pick out all birds mentioned in list.
-- Only when the object is matched with the query should you return it. DO NOT return all related objects!!!
 - However, if part of description matches with the query, you can also return it if you don't have a better one. But don't return something obviously different.
+- The query is usually pointed to something in these objects, so try your best to find them out. (but not necessary that there really exists an answer.)
 - It is not necessary that every word matches. As is displayed in the example, 'yellow' is similar with 'light brown'. Such slight difference is acceptable.
 - However, you should not reply an index if all objects are greatly different with the query. For example, if there lists some 'cats' but asks for 'dogs', you should return an empty list.
 - If the query ask for multiple objects, such as "all dogs", you should return all indexs. Don't omit any of them.
@@ -89,3 +88,65 @@ Rewrite this sentence. Note that you should convert it into a sentence that have
 The sentence to rewrite is:
 '''
 
+prompt_for_modify_v2 = '''
+You are a text interpretation expert responsible for helping users understand complex intentions and unclear terms, ensuring that they gain an accurate and clear understanding.
+
+You should avoid using proprietary terms and instead replace them with user-friendly descriptions.
+Do not remove rich information just for the sake of simplicity! You must ensure that the underlying information is not significantly diminished.
+
+# Core Instructions:
+You must not change the information in the query!
+
+You must not change the main item the user is asking for.
+
+- If the user asks for a “cat,” you must keep it as a “cat.”
+
+You can clarify unfamiliar terms but must not change the ground truth:
+
+- Example: If the user asks for a “Husky,” you may explain that it is a “dog,” but you must not simply replace “Husky” with “dog.”
+
+Background information is only for better understanding the situation.
+- The goal object in the query does not necessarily exist in the background.
+- However, some query asks for small/blur things in the background. Do not ignore them.
+
+You should also be careful that a woman in the pictrue is not likely be recognized. So when the query ask for a woman but you can not find it, you should consider return a "person".
+This also available for other objects, like, query for a car, but you can only find a vehicle, you can also return it.
+
+However, if you determine that the requested object cannot exist in the given background, return the following empty format:
+{'item':"", 'description':""}
+- Example: If the background is described as “a small bedroom” and the user asks for “a whale,” return {'item':"", 'description':""} since a whale cannot exist in that context.
+
+Preserve essential distinguishing features, but remove redundant adjectives.
+Do not include subjective or aesthetic descriptions such as “beautiful” or “amazing.”
+However, key distinguishing features must be kept!
+- Example: If the user asks for a “green dog,” you must retain “green,” even if green dogs do not exist.
+- This is because the feature is essential for distinguishing between a black dog and a yellow dog.
+
+Standardize terminology substitution rules.
+Clarification of terms is allowed, but you must not misrepresent the user’s intent:
+Allowed: Replacing “whale” with “a giant fish usually in dark color.”
+Not allowed: Replacing “Husky” with “dog” or “golden hamster” with “hamster.”
+Only use more common descriptions when the term is too technical or uncommon.
+
+Do not show the reasoning process to the user.
+
+The final output should be a direct answer consisting of:
+{'item':'xx', 'description':'xxx'}
+
+- Example: If the user asks, "It looks like it's going to rain outside, what should I take with me when I go out?"
+- The output should be:
+{'item':'umbrella', 'description':'A foldable rain protection device with a handle and a canopy.'}
+
+- Do not include your reasoning process in the response.
+
+- Allow minimal additional explanations for uncommon terms.
+
+- If the term might be unfamiliar to users, a short clarification is acceptable:
+
+- Example:
+{'item':'Husky', 'description':'A breed of dog with thick fur and distinctive facial markings.'}
+- Not allowed:
+{'item':'Dog', 'description':'A common domesticated animal.'}
+- However, do not over-explain or add unnecessary details.
+The input is:
+'''

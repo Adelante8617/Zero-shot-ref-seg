@@ -1,15 +1,15 @@
 import requests
 import ast
-from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify, prompt_for_select
+from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify, prompt_for_select, prompt_for_modify_v2
 
 def getAPIKEY():
     with open(r'D:/Zero-shot-ref-seg/api-keys.txt', 'r') as f:
         API_KEY = f.read()
     return API_KEY
 
-def one_message(input_text, role='modifier'):
+def one_message(input_text, role='modifier', modifier_version="origin"):
     role_dict = {
-        'modifier': prompt_for_modify,
+        'modifier': prompt_for_modify if modifier_version=="origin" else prompt_for_modify_v2,
         'verifier': prompt_for_verify,
         'selector': prompt_for_select
     }
@@ -57,7 +57,7 @@ def one_message(input_text, role='modifier'):
 
     return dict_obj['choices'][0]['message']['content']
 
-def modify_query(query:str,background=""):
+def modify_query(query:str,background="", version = "origin"):
     
     pass_state = False
     role_list = ['modifier','verifier', 'selector']
@@ -73,7 +73,7 @@ def modify_query(query:str,background=""):
         # current role
         role = role_list[cur_role_id]
         # send message
-        msg = one_message(input_text=msg, role=role)
+        msg = one_message(input_text=msg, role=role, modifier_version=version)
         #print('============================\n\n')
         # end modify state
         if role == 'modifier':
