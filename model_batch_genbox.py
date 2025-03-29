@@ -16,18 +16,19 @@ import re
 import ast
 
 def find_last_integer_list(s):
-    # 使用正则表达式匹配列表形式的整数
-    lists = re.findall(r'\[([0-9, -]*\d+)\]', s)
-    if lists:
-        # 将字符串转为列表并返回最后一个
-        return ast.literal_eval('[' + lists[-1] + ']')
-    return []
+    try:
+        # 使用正则表达式匹配列表形式的整数
+        lists = re.findall(r'\[([0-9, -]*\d+)\]', s)
+        if lists:
+            # 将字符串转为列表并返回最后一个
+            return ast.literal_eval('[' + lists[-1] + ']')
+        else:
+            return []
+    except:
+        return []
 
 
 print("Running...")
-with open("output2.jsonl", "w", encoding="utf-8") as f:
-    if False:
-        print()
 
 import json
 
@@ -36,18 +37,17 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-all_data = load_json('./modified_dataset.json')
+all_data = load_json('./Outputs/modified_dataset.json')
 
 
 gen_box_result = []
 
-print(all_data[1785])
 
-for eachdata in tqdm(all_data[1785:]):
+for eachdata in tqdm(all_data[753:]):
     image_path = './Data/train2014/train2014/' + eachdata['img_name']
     print(image_path)
 
-    query = eachdata['converted']
+    query = eachdata['origin_query']
 
     modified = modify_query(query)
 
@@ -55,20 +55,23 @@ for eachdata in tqdm(all_data[1785:]):
 
     total_caption = generate_caption(image_path=image_path)
 
-    print(total_caption)
-    print()
+    #print(total_caption)
+    #print()
 
     
+    try:
+        start, end = modified.rfind('{'), modified.rfind('}')
 
-    start, end = modified.rfind('{'), modified.rfind('}')
+        content_dict = None
 
-    content_dict = None
+        if start != -1 and end != -1 and start < end:
+            result = modified[start:end+1]
+            content_dict = ast.literal_eval(result)
 
-    if start != -1 and end != -1 and start < end:
-        result = modified[start:end+1]
-        content_dict = ast.literal_eval(result)
+        item_to_fetch = content_dict['item']
 
-    item_to_fetch = content_dict['item']
+    except:
+        item_to_fetch = modified
 
     print(item_to_fetch)
 

@@ -16,10 +16,13 @@ from time import time
 from tqdm import tqdm
 
 def load_jsonl(file_path):
+    data = []
     """逐行读取 JSONL 文件，返回生成器"""
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
-            yield json.loads(line)
+            data.append( json.loads(line))
+
+    return data
 
 dataset = load_jsonl('output.jsonl')
 
@@ -27,7 +30,7 @@ new_dataset = []
 
 cnt = 0
 
-for data in tqdm(dataset):
+for data in tqdm(dataset[60:]):
     cnt += 1
     image_path = "./Data/train2014/train2014/"+data['img_name']
     selected_boxes = data['gen_box']
@@ -36,15 +39,14 @@ for data in tqdm(dataset):
     binary_arr = segs
     arr_to_img = np.array(binary_arr, dtype=np.uint8) * 255
     img = Image.fromarray(arr_to_img, mode='L') 
-    save_path = './SegData/'+str(data['segment_id'])+"_seg.png"
+    save_path = './SegData_2/'+str(data['segment_id'])+"_seg.png"
     img.save(save_path)
     data['savepath'] = save_path
     new_dataset.append(data)
-    if cnt == 30:
-        break
+    
 
 
-with open("output_seg_api_redo.jsonl", "w", encoding="utf-8") as f:
+with open("output_seg_api.jsonl", "a", encoding="utf-8") as f:
     for new_line in new_dataset:
         json.dump(new_line, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行

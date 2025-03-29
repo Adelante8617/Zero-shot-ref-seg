@@ -51,7 +51,7 @@ def one_message(input_text, role='modifier'):
     response = requests.request("POST", url, json=payload, headers=headers)
     try:
         dict_obj = ast.literal_eval(response.text)
-        print(dict_obj)
+        #print(dict_obj)
     except:
         return ""
 

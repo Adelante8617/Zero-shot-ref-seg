@@ -62,7 +62,7 @@ def generate_caption(image_path,img_url=None, upload_mode='base64', detail="low"
     if response.status_code == 200: 
         rawtext =  response.text
         raw_dict = ast.literal_eval(rawtext)
-        print("A vlm response")
+        #print("A vlm response")
         return raw_dict['choices'][0]['message']['content']
     else:
         print(response.status_code)

@@ -12,7 +12,7 @@ def compute_iou(img1, img2):
 def compute_miou(ground_truth_filepath="./Data/masks/refcoco/", mode='API'):
     result_folder = ""
     if mode == 'API':
-        result_folder = './SegData/'
+        result_folder = './SegData_2/'
     elif mode == 'Local':
         result_folder = './SegData_local/'
     else:
@@ -40,7 +40,4 @@ def compute_miou(ground_truth_filepath="./Data/masks/refcoco/", mode='API'):
 
 
 miou_value = compute_miou(mode="API")
-print(f"API Calling Mean IoU: {miou_value:.4f}")
-
-miou_value = compute_miou(mode="LocalmIoU.py")
 print(f"API Calling Mean IoU: {miou_value:.4f}")

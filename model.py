@@ -3,10 +3,10 @@ sys.path.append(r'D:/Zero-shot-ref-seg/Img2Cap')
 sys.path.append(r'D:/Zero-shot-ref-seg/ObjDetect')
 sys.path.append(r'D:/Zero-shot-ref-seg/Reasoner')
 
-#from Img2Cap.LMM_API import generate_caption
-from Img2Cap.local_captioner import generate_caption
+from Img2Cap.LMM_API import generate_caption
+#from Img2Cap.local_captioner import generate_caption
 from ObjDetect.BoxGen import getBoxFromText
-from Reasoner.Local_LLM_reasoner import modify_query, select_from_list
+from Reasoner.LLM_API_calling import modify_query, select_from_list
 #from Seg.GenSeg import getSegFromBox
 import ast
 from PIL import Image

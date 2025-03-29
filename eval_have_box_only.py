@@ -5,10 +5,13 @@ from tqdm import tqdm
 import json
 
 def load_jsonl(file_path):
+    data = []
     """逐行读取 JSONL 文件，返回生成器"""
     with open(file_path, "r", encoding="utf-8") as f:
         for line in f:
-            yield json.loads(line)
+            data.append(json.loads(line))
+
+    return data
 
 def compute_iou(img1, img2):
     """计算单对图像的 IoU"""
@@ -18,18 +21,20 @@ def compute_iou(img1, img2):
 
 def compute_miou(ground_truth_filepath="./Data/masks/refcoco/", mode='API'):
     
-    result = load_jsonl('output_seg.jsonl')
+    result = load_jsonl('output_seg_api.jsonl')
     
     ious = []
 
-    
+    no_box = 0
     
     for data in tqdm(result):
-        if len(data['gen_box']) == 0:
+        if len(data['gen_box']) == 0 and False:
+            no_box += 1
             continue
 
-        filename = data['savepath']
-        origin_file_path =  ground_truth_filepath + filename.replace('_seg', '').replace('./SegData/', '')
+        seg_id = data["segment_id"]
+        filename = f"Outputs/OutputMasks/SegData/{seg_id}_seg.png"
+        origin_file_path =  ground_truth_filepath + filename.replace('_seg', '').replace('Outputs/OutputMasks/SegData/', '')
         result_file_path = filename
         
         gt_img = cv2.imread(origin_file_path, cv2.IMREAD_GRAYSCALE)
@@ -42,21 +47,22 @@ def compute_miou(ground_truth_filepath="./Data/masks/refcoco/", mode='API'):
         ious.append(iou)
 
     miou = np.mean(ious)
+    print("No box:", no_box, " ratio:", no_box/len(result))
     return miou
 
 def compute_overall_iou(ground_truth_filepath="./Data/masks/refcoco/", mode='API'):
     
-    result = load_jsonl('output_seg.jsonl')
+    result = load_jsonl('output_seg_api.jsonl')
 
     total_intersection = 0
     total_union = 0
     
     for data in tqdm(result):
-        if len(data['gen_box']) == 0:
+        if len(data['gen_box']) == 0 and False:
             continue
-
-        filename = data['savepath']
-        origin_file_path =  ground_truth_filepath + filename.replace('_seg', '').replace('./SegData/', '')
+        seg_id = data["segment_id"]
+        filename = f"Outputs/OutputMasks/SegData/{seg_id}_seg.png"
+        origin_file_path =  ground_truth_filepath + filename.replace('_seg', '').replace('Outputs/OutputMasks/SegData/', '')
         result_file_path = filename
         
         gt_img = cv2.imread(origin_file_path, cv2.IMREAD_GRAYSCALE)
