@@ -14,7 +14,7 @@ def load_jsonl(file_path):
     return data
 
 
-v2_res = load_jsonl('output_v2prompt.jsonl')
+v2_res = load_jsonl('output_v2prompt_test_B.jsonl')
 
 emp_cnt = 0
 
@@ -54,7 +54,10 @@ for line in v2_res:
         emp_cnt += 1
 
     else:
-        mIOU += iou(line['gen_box'][0], line['groundtruth_bbox'])
+        maxval = 0
+        for box in line['gen_box']:
+            maxval = max(maxval, iou(box, line['groundtruth_bbox']))
+        mIOU += maxval
 
 print(emp_cnt, '/', len(v2_res) ,'=', emp_cnt/len(v2_res)*100, '%')
 
