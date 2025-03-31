@@ -33,7 +33,7 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-all_data = load_json('./modified_dataset.json')
+all_data = load_json('Outputs/modified_dataset_B.json')
 
 
 gen_box_result = []
@@ -73,6 +73,32 @@ for eachdata in tqdm(all_data[:]):
     except:
         boxes = []
 
+    if len(boxes) == 0:
+        # retry
+
+        modified = modify_query(query + "and the background is:\n" + total_caption)
+
+        start, end = modified.rfind('{'), modified.rfind('}')
+
+        content_dict = None
+
+        
+        try:
+
+            if start != -1 and end != -1 and start < end:
+                result = modified[start:end+1]
+            
+                content_dict = ast.literal_eval(result)
+
+            item_to_fetch = content_dict['item']
+            
+
+
+            boxes = getBoxFromText(IMAGE_PATH=image_path, TEXT_PROMPT=item_to_fetch)
+
+        except:
+            boxes = []
+
 
     image = Image.open(image_path)
     caption_list = []
@@ -103,7 +129,7 @@ for eachdata in tqdm(all_data[:]):
     eachdata['gen_box'] = selected_boxes
 
 
-    with open("output_lcoalver.jsonl", "a", encoding="utf-8") as f:
+    with open("output_localver_testB.jsonl", "a", encoding="utf-8") as f:
         json.dump(eachdata, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++55+++++
 

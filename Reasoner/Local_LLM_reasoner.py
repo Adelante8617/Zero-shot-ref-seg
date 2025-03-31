@@ -1,7 +1,7 @@
 import requests
 import ast
 import gc
-from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify, prompt_for_select
+from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify, prompt_for_select, prompt_for_modify_v2
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from torch.cuda.amp import autocast
@@ -33,7 +33,7 @@ def one_message(input_text, role='modifier'):
     torch.cuda.empty_cache()
 
     role_dict = {
-        'modifier': prompt_for_modify,
+        'modifier': prompt_for_modify_v2,
         'verifier': prompt_for_verify,
         'selector': "This task is easy. DO NOT THINK!!! directly answer the question. "+prompt_for_select
     }

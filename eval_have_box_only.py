@@ -21,20 +21,20 @@ def compute_iou(img1, img2):
 
 def compute_miou(ground_truth_filepath="./Data/masks/refcoco/", mode='API'):
     
-    result = load_jsonl('output_seg_api.jsonl')
+    result = load_jsonl('output_v2prompt_test_B.jsonl')
     
     ious = []
 
     no_box = 0
     
     for data in tqdm(result):
-        if len(data['gen_box']) == 0 and False:
+        if len(data['gen_box']) == 0 :
             no_box += 1
             continue
 
         seg_id = data["segment_id"]
-        filename = f"Outputs/OutputMasks/SegData/{seg_id}_seg.png"
-        origin_file_path =  ground_truth_filepath + filename.replace('_seg', '').replace('Outputs/OutputMasks/SegData/', '')
+        filename = f"Seg_Test_B/{seg_id}_seg.png"
+        origin_file_path =  ground_truth_filepath + filename.replace('_seg', '').replace('Seg_Test_B/', '')
         result_file_path = filename
         
         gt_img = cv2.imread(origin_file_path, cv2.IMREAD_GRAYSCALE)
@@ -88,6 +88,4 @@ def compute_overall_iou(ground_truth_filepath="./Data/masks/refcoco/", mode='API
 miou_value = compute_miou(mode="API")
 print(f"API Calling Mean IoU: {miou_value:.4f}")
 
-oiou_value = compute_overall_iou()
-print(f"API Calling Overall IoU: {oiou_value:.4f}")
 
