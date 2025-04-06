@@ -14,7 +14,7 @@ def load_jsonl(file_path):
     return data
 
 
-v2_res = load_jsonl('output_v2prompt_test_B.jsonl')
+v2_res = load_jsonl('output_v2prompt_test_A_api.jsonl')
 
 emp_cnt = 0
 
@@ -61,4 +61,4 @@ for line in v2_res:
 
 print(emp_cnt, '/', len(v2_res) ,'=', emp_cnt/len(v2_res)*100, '%')
 
-print(mIOU/(len(v2_res) - emp_cnt))
+print(mIOU/(len(v2_res) ))

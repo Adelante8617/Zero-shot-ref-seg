@@ -21,7 +21,7 @@ def compute_iou(img1, img2):
 
 def compute_miou(ground_truth_filepath="./Data/masks/refcoco/", mode='API'):
     
-    result = load_jsonl('output_v2prompt_test_B.jsonl')
+    result = load_jsonl('output_seg_test_A_api_v2.jsonl')
     
     ious = []
 
@@ -33,8 +33,8 @@ def compute_miou(ground_truth_filepath="./Data/masks/refcoco/", mode='API'):
             continue
 
         seg_id = data["segment_id"]
-        filename = f"Seg_Test_B/{seg_id}_seg.png"
-        origin_file_path =  ground_truth_filepath + filename.replace('_seg', '').replace('Seg_Test_B/', '')
+        filename = f"Seg_Test_A_Api/{seg_id}_seg.png"
+        origin_file_path =  ground_truth_filepath + filename.replace('_seg', '').replace('Seg_Test_A_Api/', '')
         result_file_path = filename
         
         gt_img = cv2.imread(origin_file_path, cv2.IMREAD_GRAYSCALE)
@@ -46,7 +46,7 @@ def compute_miou(ground_truth_filepath="./Data/masks/refcoco/", mode='API'):
         iou = compute_iou(gt_img, pred_img)
         ious.append(iou)
 
-    miou = np.mean(ious)
+    miou = np.mean(ious) 
     print("No box:", no_box, " ratio:", no_box/len(result))
     return miou
 

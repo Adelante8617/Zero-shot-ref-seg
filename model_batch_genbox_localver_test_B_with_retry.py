@@ -39,7 +39,7 @@ all_data = load_json('Outputs/modified_dataset_B.json')
 gen_box_result = []
 
 
-for eachdata in tqdm(all_data[:]):
+for eachdata in tqdm(all_data[1082:]):
     image_path = './Data/train2014/train2014/' + eachdata['img_name']
 
     query = eachdata['converted']
@@ -129,7 +129,7 @@ for eachdata in tqdm(all_data[:]):
     eachdata['gen_box'] = selected_boxes
 
 
-    with open("output_localver_testB.jsonl", "a", encoding="utf-8") as f:
+    with open("output_localver_testB_batch2.jsonl", "a", encoding="utf-8") as f:
         json.dump(eachdata, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++55+++++
 

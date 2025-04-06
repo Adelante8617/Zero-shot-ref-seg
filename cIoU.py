@@ -65,7 +65,7 @@ def load_jsonl(file_path):
 
     return data
 
-dataset = load_jsonl("Outputs\output_seg.jsonl")
+dataset = load_jsonl("output_seg_test_A_api_v2.jsonl")
 
 box_gt, box_pred = [], []
 

@@ -57,7 +57,7 @@ def one_message(input_text, role='modifier', modifier_version="origin"):
 
     return dict_obj['choices'][0]['message']['content']
 
-def modify_query(query:str,background="", version = "origin"):
+def modify_query(query:str, background="", version = "origin"):
     
     pass_state = False
     role_list = ['modifier','verifier', 'selector']

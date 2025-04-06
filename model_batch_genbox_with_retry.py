@@ -3,10 +3,10 @@ sys.path.append(r'D:/Zero-shot-ref-seg/Img2Cap')
 sys.path.append(r'D:/Zero-shot-ref-seg/ObjDetect')
 sys.path.append(r'D:/Zero-shot-ref-seg/Reasoner')
 
-#from Img2Cap.LMM_API import generate_caption
-from Img2Cap.local_captioner import generate_caption
+from Img2Cap.LMM_API import generate_caption
+#from Img2Cap.local_captioner import generate_caption
 from ObjDetect.BoxGen import getBoxFromText
-from Reasoner.Local_LLM_reasoner import modify_query, select_from_list
+from Reasoner.LLM_API_calling import modify_query, select_from_list
 #from Seg.GenSeg import getSegFromBox
 import ast
 from PIL import Image
@@ -37,7 +37,7 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-all_data = load_json('./Outputs/modified_dataset_B.json')
+all_data = load_json('./Outputs/modified_dataset.json')
 
 
 gen_box_result = []
@@ -116,7 +116,7 @@ def one_process(image_path, query):
     return selected_boxes
 
 
-for eachdata in tqdm(all_data[:]):
+for eachdata in tqdm(all_data[472:]):
     image_path = './Data/train2014/train2014/' + eachdata['img_name']
 
     query = eachdata['origin_query']
@@ -124,7 +124,7 @@ for eachdata in tqdm(all_data[:]):
    
     eachdata['gen_box'] = one_process(query=query, image_path=image_path)
 
-    with open("output_v2prompt_test_B_local.jsonl", "a", encoding="utf-8") as f:
+    with open("output_v2prompt_test_A_api_batch2.jsonl", "a", encoding="utf-8") as f:
         json.dump(eachdata, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行
 
