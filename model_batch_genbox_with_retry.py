@@ -37,7 +37,7 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-all_data = load_json('./Outputs/modified_dataset.json')
+all_data = load_json('modified_dataset_B.json')
 
 
 gen_box_result = []
@@ -116,15 +116,15 @@ def one_process(image_path, query):
     return selected_boxes
 
 
-for eachdata in tqdm(all_data[472:]):
+for eachdata in tqdm(all_data[1131:]):
     image_path = './Data/train2014/train2014/' + eachdata['img_name']
 
-    query = eachdata['origin_query']
+    query = eachdata['converted']
 
    
     eachdata['gen_box'] = one_process(query=query, image_path=image_path)
 
-    with open("output_v2prompt_test_A_api_batch2.jsonl", "a", encoding="utf-8") as f:
+    with open("output_v2prompt_test_B_cvt_batch2.jsonl", "a", encoding="utf-8") as f:
         json.dump(eachdata, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行
 

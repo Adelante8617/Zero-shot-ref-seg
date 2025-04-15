@@ -7,7 +7,7 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-data = load_json('anns/refcoco/testA.json')
+data = load_json('anns/refcoco/testB.json')
 
 sentences_to_rewrite = []
 
@@ -75,7 +75,7 @@ print(rewrited_sentences[:5],end='============\n\n')
 data = {key: value for key, value in zip(sentences_to_rewrite, rewrited_sentences)}
 
 # 保存为 JSON 文件
-with open("output.json", "w", encoding="utf-8") as f:
+with open("output_test_B.json", "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=4)
 
 

@@ -7,12 +7,12 @@ def load_json(filepath):
 
 data = load_json('D:/Zero-shot-ref-seg/Data/anns/refcoco/testB.json')
 
-#modified_query = load_json('D:/Zero-shot-ref-seg/Data/output_cvt.json')
+modified_query = load_json('Data/output_cvt_test_B.json')
 
 
-#cvt_dict = {}
-#for pair in modified_query:
-#    cvt_dict[pair['origin']] = pair['convert']
+cvt_dict = {}
+for pair in modified_query:
+    cvt_dict[pair['origin']] = pair['convert']
 
 
 newdata = []
@@ -24,7 +24,7 @@ for each in data:
     onedata = {
         "img_name": each['img_name'],
         "origin_query": longest_text,
-        "converted": longest_text,
+        "converted": cvt_dict[longest_text],
         "groundtruth_bbox": each['bbox'],
         "segment_id": each['segment_id']
     }
