@@ -37,45 +37,63 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-all_data = load_json('./Outputs/modified_dataset.json')
+def load_jsonl(file_path):
+    data = []
+    """逐行读取 JSONL 文件，返回生成器"""
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            data.append( json.loads(line))
+
+    return data
+
+all_data = load_jsonl('output_test_B_cvt_v1.jsonl')
 
 
 gen_box_result = []
 
 
-for eachdata in tqdm(all_data[753:]):
+for eachdata in tqdm(all_data[509:]):
     image_path = './Data/train2014/train2014/' + eachdata['img_name']
-    print(image_path)
+    #print(image_path)
 
-    query = eachdata['origin_query']
+    query = eachdata['converted']
 
-    modified = modify_query(query)
+    #modified = modify_query(query,  version = "v2")
 
-    print(modified)
+    #print(modified)
 
     total_caption = generate_caption(image_path=image_path)
 
     #print(total_caption)
     #print()
 
-    
-    try:
-        start, end = modified.rfind('{'), modified.rfind('}')
+    if not True:
+        try:
+            start, end = modified.rfind('{'), modified.rfind('}')
 
-        content_dict = None
+            content_dict = None
 
-        if start != -1 and end != -1 and start < end:
-            result = modified[start:end+1]
-            content_dict = ast.literal_eval(result)
+            if start != -1 and end != -1 and start < end:
+                result = modified[start:end+1]
+                content_dict = ast.literal_eval(result)
 
-        item_to_fetch = content_dict['item']
+            item_to_fetch = content_dict['item']
+            description = content_dict['description']
 
-    except:
-        item_to_fetch = modified
+        except:
+            item_to_fetch = modified
+            description = modified
 
-    print(item_to_fetch)
+        #print(item_to_fetch)
+        eachdata['item_to_fetch'] = item_to_fetch
+        eachdata['description'] = description
 
+        with open("output_test_A_cvt_v2.jsonl", "a", encoding="utf-8") as f:
+            json.dump(eachdata, f, ensure_ascii=False)
+            f.write("\n")  # 每个 JSON 对象独占一行
 
+    item_to_fetch = eachdata['item_to_fetch']
+    description = eachdata['description'] 
     boxes = getBoxFromText(IMAGE_PATH=image_path, TEXT_PROMPT=item_to_fetch)
 
 
@@ -93,9 +111,9 @@ for eachdata in tqdm(all_data[753:]):
 
 
 
-    selected_ids = select_from_list(origin_query=query, total_caption=total_caption, query=content_dict['description'], sub_caption_list=caption_list )
+    selected_ids = select_from_list(origin_query=query, total_caption=total_caption, query=description, sub_caption_list=caption_list )
 
-    print(selected_ids)
+    #print(selected_ids)
 
 
     item_index = find_last_integer_list(selected_ids)
@@ -103,17 +121,14 @@ for eachdata in tqdm(all_data[753:]):
 
     selected_boxes = [boxes[i-1].tolist() for i in item_index if i-1<len(boxes)]
 
-    print(selected_boxes)
+    #print(selected_boxes)
     
     eachdata['gen_box'] = selected_boxes
+    
 
-
-    with open("output.jsonl", "a", encoding="utf-8") as f:
+    with open("output_test_B_v1_boxes.jsonl", "a", encoding="utf-8") as f:
         json.dump(eachdata, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行
 
-    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-    print("New line")
-    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 

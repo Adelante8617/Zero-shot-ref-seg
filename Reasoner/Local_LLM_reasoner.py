@@ -33,7 +33,7 @@ def one_message(input_text, role='modifier'):
     torch.cuda.empty_cache()
 
     role_dict = {
-        'modifier': prompt_for_modify,
+        'modifier': prompt_for_modify_v2,
         'verifier': prompt_for_verify,
         'selector': "This task is easy. DO NOT THINK!!! directly answer the question. "+prompt_for_select
     }

@@ -37,7 +37,7 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-all_data = load_json('modified_dataset_B.json')
+all_data = load_json('./Outputs/modified_dataset.json')
 
 
 gen_box_result = []
@@ -87,6 +87,9 @@ def one_process(image_path, query):
         content_dict, _ = get_item_to_fetch(query=query,  total_caption=total_caption, need_background_info=True)
 
     item_to_fetch = content_dict['item']
+    description = content_dict['description']
+
+    return item_to_fetch, description
 
     boxes = getBoxFromText(IMAGE_PATH=image_path, TEXT_PROMPT=item_to_fetch)
 
@@ -116,15 +119,15 @@ def one_process(image_path, query):
     return selected_boxes
 
 
-for eachdata in tqdm(all_data[1131:]):
+for eachdata in tqdm(all_data[:]):
     image_path = './Data/train2014/train2014/' + eachdata['img_name']
 
     query = eachdata['converted']
 
    
-    eachdata['gen_box'] = one_process(query=query, image_path=image_path)
+    eachdata['item_to_fetch'], eachdata['description'] = one_process(query=query, image_path=image_path)
 
-    with open("output_v2prompt_test_B_cvt_batch2.jsonl", "a", encoding="utf-8") as f:
+    with open("output_test_A_cvt_v2.jsonl", "a", encoding="utf-8") as f:
         json.dump(eachdata, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行
 

@@ -33,18 +33,39 @@ def load_json(filepath):
         data = json.load(f)  # 解析 JSON 为 Python 字典
     return data
 
-all_data = load_json('Outputs/modified_dataset.json')
+
+def load_jsonl(file_path):
+    data = []
+    """逐行读取 JSONL 文件，返回生成器"""
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            data.append( json.loads(line, strict=False))
+
+    return data
+
+def load_jsonl_tmp(file_path):
+    data = []
+    """逐行读取 JSONL 文件，返回生成器"""
+    with open(file_path, "r", encoding="utf-8") as f:
+        for line in f:
+            data.append( ast.literal_eval(line.strip()))
+
+    return data
+
+#all_data = load_json()
+all_data = load_jsonl_tmp('output_test_B_cvt_v1_local.jsonl')
 
 
 gen_box_result = []
 
 
 for eachdata in tqdm(all_data[:]):
+
     image_path = './Data/train2014/train2014/' + eachdata['img_name']
 
-    query = eachdata['converted']
+    query = eachdata['origin_query']
 
-    modified = modify_query(query)
+    #modified = modify_query(query)
 
 
     total_caption = generate_caption(image_path=image_path)
@@ -52,26 +73,38 @@ for eachdata in tqdm(all_data[:]):
 
     
 
-    start, end = modified.rfind('{'), modified.rfind('}')
+    #start, end = modified.rfind('{'), modified.rfind('}')
 
-    content_dict = None
+    #content_dict = None
 
     
-    try:
+    #try:
 
-        if start != -1 and end != -1 and start < end:
-            result = modified[start:end+1]
+    #    if start != -1 and end != -1 and start < end:
+            #result = modified[start:end+1]
         
-            content_dict = ast.literal_eval(result)
+            #content_dict = ast.literal_eval(result)
 
-        item_to_fetch = content_dict['item']
+        #item_to_fetch = content_dict['item']
+        #description = content_dict['description']
         
 
 
-        boxes = getBoxFromText(IMAGE_PATH=image_path, TEXT_PROMPT=item_to_fetch)
+        #boxes = getBoxFromText(IMAGE_PATH=image_path, TEXT_PROMPT=item_to_fetch)
 
-    except:
-        boxes = []
+    #except:
+        #item_to_fetch = str(modified)
+        #description = str(modified)
+        #boxes = []
+
+    item_to_fetch = eachdata['item_to_fetch']
+    description = eachdata['description']
+    boxes = getBoxFromText(IMAGE_PATH=image_path, TEXT_PROMPT=item_to_fetch)
+
+    #eachdata['gen_box'] = selected_boxes
+    #eachdata['item_to_fetch'] = item_to_fetch
+    #eachdata['description'] = description
+
 
 
     image = Image.open(image_path)
@@ -88,7 +121,7 @@ for eachdata in tqdm(all_data[:]):
 
 
     try:
-        selected_ids = select_from_list(origin_query=query, total_caption=total_caption, query=content_dict['description'], sub_caption_list=caption_list )
+        selected_ids = select_from_list(origin_query=query, total_caption=total_caption, query=description, sub_caption_list=caption_list )
 
 
 
@@ -103,7 +136,7 @@ for eachdata in tqdm(all_data[:]):
     eachdata['gen_box'] = selected_boxes
 
 
-    with open("output_lcoalver.jsonl", "a", encoding="utf-8") as f:
+    with open("output_local_v1_cvt_testB_boxes.jsonl", "a", encoding="utf-8") as f:
         json.dump(eachdata, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++55+++++
 

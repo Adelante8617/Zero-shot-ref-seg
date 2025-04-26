@@ -14,7 +14,7 @@ def load_jsonl(file_path):
     return data
 
 
-v2_res = load_jsonl('output_v2prompt_test_B_cvt.jsonl')
+v2_res = load_jsonl('output_local_v2_testB_boxes.jsonl')
 
 emp_cnt = 0
 
