@@ -220,9 +220,9 @@ def compute_overall_pixel_accuracy(ground_truth_filepath="./Data/masks/refcoco/"
     return all_res
 
 
-json_path='output_seg_baseline_A_origin.jsonl'
+json_path='output_seg_baseline_B_origin.jsonl'
 
-filename_prefix="Seg_Baseline_A_origin/"
+filename_prefix="Seg_Baseline_B_origin/"
 
 miou_value = compute_miou(json_path=json_path, filename_prefix=filename_prefix)
 print(f"Mean IoU: {miou_value[0]:.4f},  {miou_value[1]:.4f}")

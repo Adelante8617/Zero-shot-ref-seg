@@ -66,6 +66,7 @@ def generate_caption(image_path,img_url=None, upload_mode='base64', detail="low"
         return raw_dict['choices'][0]['message']['content']
     else:
         print(response.status_code)
+        print(response.text)
         return "ERROR OCCURED!"
 
 

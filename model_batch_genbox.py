@@ -4,6 +4,7 @@ sys.path.append(r'D:/Zero-shot-ref-seg/ObjDetect')
 sys.path.append(r'D:/Zero-shot-ref-seg/Reasoner')
 
 from Img2Cap.LMM_API import generate_caption
+import Img2Cap.local_captioner as img_caption_local
 #from Img2Cap.local_captioner import generate_caption
 from ObjDetect.BoxGen import getBoxFromText
 from Reasoner.LLM_API_calling import modify_query, select_from_list
@@ -52,7 +53,7 @@ all_data = load_jsonl('output_test_B_cvt_v1.jsonl')
 gen_box_result = []
 
 
-for eachdata in tqdm(all_data[509:]):
+for eachdata in tqdm(all_data[600:]):
     image_path = './Data/train2014/train2014/' + eachdata['img_name']
     #print(image_path)
 
@@ -102,11 +103,19 @@ for eachdata in tqdm(all_data[509:]):
 
     # 遍历所有矩形框
     for i, (x1, y1, x2, y2) in enumerate(boxes):
+        
         # 截取矩形框内的图像
         cropped_image = image.crop((x1, y1, x2, y2))
         cropped_image_path = f'./Data/cropped_imgs/cropped_image_{i}.jpg'
         cropped_image.save(cropped_image_path)
-        sub_caption = generate_caption(cropped_image_path)
+        sub_caption = ""
+
+        if abs(x1-x2)<=28 or abs(y1-y2)<=28:
+            sub_caption = img_caption_local.generate_caption(cropped_image_path)
+            
+        else:
+            sub_caption = generate_caption(cropped_image_path)
+            
         caption_list.append(sub_caption)
 
 
