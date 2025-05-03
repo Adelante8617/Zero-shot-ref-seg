@@ -19,12 +19,15 @@ def load_jsonl(file_path):
     data = []
     """逐行读取 JSONL 文件，返回生成器"""
     with open(file_path, "r", encoding="utf-8") as f:
+        i = 0
         for line in f:
+            print(i)
             data.append( json.loads(line))
+            i+=1
 
     return data
 
-dataset = load_jsonl('output_baseline_test_B_origin.jsonl')
+dataset = load_jsonl('output_test_B_v1_boxes.jsonl')
 
 new_dataset = []
 
@@ -39,14 +42,14 @@ for data in tqdm(dataset[:]):
     binary_arr = segs
     arr_to_img = np.array(binary_arr, dtype=np.uint8) * 255
     img = Image.fromarray(arr_to_img, mode='L') 
-    save_path = './Seg_Baseline_B_origin/'+str(data['segment_id'])+"_seg.png"
+    save_path = './Seg_Test_B_v1/'+str(data['segment_id'])+"_seg.png"
     img.save(save_path)
     data['savepath'] = save_path
     new_dataset.append(data)
     
 
 
-with open("output_seg_baseline_B_origin.jsonl", "a", encoding="utf-8") as f:
+with open("output_seg_test_B_v1.jsonl", "a", encoding="utf-8") as f:
     for new_line in new_dataset:
         json.dump(new_line, f, ensure_ascii=False)
         f.write("\n")  # 每个 JSON 对象独占一行

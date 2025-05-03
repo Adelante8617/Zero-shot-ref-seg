@@ -53,7 +53,7 @@ all_data = load_jsonl('output_test_B_cvt_v1.jsonl')
 gen_box_result = []
 
 
-for eachdata in tqdm(all_data[600:]):
+for eachdata in tqdm(all_data[1433:]):
     image_path = './Data/train2014/train2014/' + eachdata['img_name']
     #print(image_path)
 
@@ -101,6 +101,17 @@ for eachdata in tqdm(all_data[600:]):
     image = Image.open(image_path)
     caption_list = []
 
+    output_file = "output_tmp.txt"
+
+    # 打开输出文件
+    with open(output_file, 'w') as f:
+        # 将print的数据写入到文件中
+        print("Hello, world!", file=f)
+        print(boxes, file=f)
+    
+    if len(boxes)> 5:
+        boxes = boxes[:5]
+
     # 遍历所有矩形框
     for i, (x1, y1, x2, y2) in enumerate(boxes):
         
@@ -115,7 +126,7 @@ for eachdata in tqdm(all_data[600:]):
             
         else:
             sub_caption = generate_caption(cropped_image_path)
-            
+
         caption_list.append(sub_caption)
 
 
@@ -128,7 +139,7 @@ for eachdata in tqdm(all_data[600:]):
     item_index = find_last_integer_list(selected_ids)
 
 
-    selected_boxes = [boxes[i-1].tolist() for i in item_index if i-1<len(boxes)]
+    selected_boxes = [boxes[i-1] for i in item_index if i-1<len(boxes)]
 
     #print(selected_boxes)
     

@@ -53,7 +53,7 @@ def one_message(input_text, role='modifier', modifier_version="origin"):
         dict_obj = ast.literal_eval(response.text)
         #print(dict_obj)
     except:
-        print(dict_obj['choices'][0]['message'])
+        print(response.text)
         return ""
 
     return dict_obj['choices'][0]['message']['content']
