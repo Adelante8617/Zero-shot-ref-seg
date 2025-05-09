@@ -1,6 +1,6 @@
 import requests
 import ast
-from Reasoner.prompt_text import prompt_for_modify, prompt_for_verify, prompt_for_select, prompt_for_modify_v2
+from prompt_text import prompt_for_modify, prompt_for_verify, prompt_for_select, prompt_for_modify_v2
 
 def getAPIKEY():
     with open(r'D:/Zero-shot-ref-seg/api-keys.txt', 'r') as f:
@@ -63,7 +63,7 @@ def modify_query(query:str, background="", version = "origin"):
     pass_state = False
     role_list = ['modifier','verifier', 'selector']
 
-    cur_role_id = 0
+    cur_role_id = 1
     final_query = ''
     max_try = 3
     cur_try = 0
@@ -75,6 +75,10 @@ def modify_query(query:str, background="", version = "origin"):
         role = role_list[cur_role_id]
         # send message
         msg = one_message(input_text=msg, role=role, modifier_version=version)
+        print()
+        print(msg)
+        print()
+        print()
         #print('============================\n\n')
         # end modify state
         if role == 'modifier':
@@ -102,4 +106,4 @@ def select_from_list(origin_query, total_caption, query, sub_caption_list):
     return msg
 
 if __name__ == "__main__":
-    print(modify_query('A pipe that can use to suck soft drinks'))
+    print(modify_query('the pipe-like tool that can used for sucking soft drinks'))

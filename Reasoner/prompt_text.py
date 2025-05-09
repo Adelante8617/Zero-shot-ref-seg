@@ -1,7 +1,11 @@
 prompt_for_verify = '''
 You are a text verification expert responsible for checking whether a piece of formatted text is direct enough. 
 
-If you think you can't understand the given sentence, return False and explain why, else return true.
+If you think you feel the given sentence not direct, which means that it needs reasoning to understand, return False and explain why in detailed, else return true.
+
+For example:
+"A foldable rain protection device with a handle and a canopy." is not direct. This sentence means "umbrella", which is much direct and clear.
+
 
 Your output should be a judgment result of the current sentence following this format:
 {
